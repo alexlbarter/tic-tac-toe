@@ -6,10 +6,10 @@ def generate_display_str(game_state, symbols=(" ", "O", "X")):
     return "\n".join(output)
 
 
-def display_game(game_state, player_symbols=("O", "X")):
-    for symbol in player_symbols:
+def display_game(game_state, symbols=(" ", "O", "X")):
+    for symbol in symbols:
         if len(symbol) != 1:
             raise ValueError(f"Custom player symbols must have length of 1, not {len(symbol)}")
-    if player_symbols[0] == player_symbols[1]:
-        raise ValueError(f"Player symbols must be unique, both were {player_symbols[0]}")
-    print(generate_display_str(game_state, (" ", player_symbols[0], player_symbols[1])))
+    if symbols[1] == symbols[2]:
+        raise ValueError(f"Player symbols must be unique, both were {symbols[1]}")
+    print(generate_display_str(game_state, symbols))
