@@ -5,6 +5,7 @@ from itertools import cycle
 
 class Game:
     DEFAULT_SYMBOLS = (" ", "O", "X")
+    LINES = ((0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6))
 
     def __init__(self, num_players, mode="console", custom_symbols=None):
         self.num_players = num_players
@@ -47,8 +48,7 @@ class Game:
         self.game_state[move - 1] = player
 
     def check_winner(self):
-        lines = ((0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6))
-        for line in lines:
+        for line in self.LINES:
             if self.game_state[line[0]] == self.game_state[line[1]] == self.game_state[line[2]]:
                 if self.game_state[line[0]] == 0:
                     continue
@@ -69,11 +69,13 @@ class Game:
                     self.set_move(1, self.get_move())
                 elif player_turn == 2:
                     # TODO: implement smart AI, not just random moves
-                    while True:
-                        com_move = random.randint(1, 9)
-                        if self.game_state[com_move - 1] == 0:
-                            break
-                    self.set_move(2, com_move)
+                    # -- Offence
+                    # Find a line with one gap
+                    for line in self.LINES:
+                        game_line = [self.game_state[x] for x in line]
+                        if game_line.count(2) == 2 and game_line.count(0) == 1:
+                            com_move = line[game_line.index(0)]
+                            game.set_move(2, com_move)
 
                 winner = self.check_winner()
                 if winner is not None:
