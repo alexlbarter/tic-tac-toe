@@ -1,5 +1,5 @@
 import unittest
-import console_display
+from scripts import console_display
 
 
 class TestConsoleDisplay(unittest.TestCase):

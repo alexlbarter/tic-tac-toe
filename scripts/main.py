@@ -1,4 +1,4 @@
-import console_display
+from scripts import console_display
 import random
 from itertools import cycle
 

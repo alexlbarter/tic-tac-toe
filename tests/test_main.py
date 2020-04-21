@@ -1,5 +1,5 @@
 import unittest
-import main
+from scripts import main
 import unittest.mock
 
 
@@ -10,6 +10,11 @@ class TestMain(unittest.TestCase):
         for case in cases:
             with unittest.mock.patch("builtins.input", return_value=case[0]):
                 self.assertEqual(game.get_move(), case[1])
+
+    def test_com_move_offence(self):
+        game = main.Game(1)
+        game.game_state = [2, 2, 0, 0, 0, 0, 0, 0, 0]
+
 
 
 if __name__ == '__main__':
