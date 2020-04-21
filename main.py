@@ -34,7 +34,7 @@ class Game:
                          ["bottom right", "right bottom"]]
                 for name in names:
                     if move in name:
-                        return name.index - 1
+                        return names.index(name) + 1
                 else:
                     raise ValueError("Not a valid position")
             else:
