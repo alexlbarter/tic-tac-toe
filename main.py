@@ -19,8 +19,29 @@ class Game:
         if self.mode == "console":
             # numbered 1-9 from top left across
             # TODO: update to allow move in words, i.e. 'top left' or 'middle right'
-            move = int(input("Move: ").strip())
-            return move
+            move = input("Move: ").strip().lower()
+            try:
+                move = int(move)
+            except ValueError:
+                names = [["top left", "left top"],
+                         ["top middle", "middle top"],
+                         ["top right", "right top"],
+                         ["middle left", "left middle"],
+                         ["centre", "center", "middle"],
+                         ["middle right", "right middle"],
+                         ["bottom left", "left bottom"],
+                         ["bottom middle", "middle bottom"],
+                         ["bottom right", "right bottom"]]
+                for name in names:
+                    if move in name:
+                        return name.index - 1
+                else:
+                    raise ValueError("Not a valid position")
+            else:
+                if 1 <= move <= 9:
+                    return move
+                else:
+                    raise ValueError("Not a valid position")
 
     def set_move(self, player, move):
         self.game_state[move - 1] = player
