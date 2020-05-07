@@ -17,3 +17,5 @@ async def on_ready():
 @bot.command(name="play")
 async def play_game(ctx):
     pass
+
+bot.run(BOT_TOKEN)
