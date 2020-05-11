@@ -40,6 +40,26 @@ class TestMain(unittest.TestCase):
                     with self.assertRaises(ValueError):
                         game.get_move()
 
+    def test_com_move_offence(self):
+        cases = (([2, 2, 0, 1, 1, 0, 1, 0, 0], 2),
+                 ([2, 0, 0, 1, 0, 1, 1, 0, 2], 4),
+                 ([1, 1, 2, 0, 1, 2, 0, 0, 0], 8))
+        game = main.Game(1)
+        for case in cases:
+            with self.subTest(case=case):
+                game.game_state = case[0]
+                self.assertEqual(game.com_move(), case[1])
+
+    def test_com_move_defence(self):
+        cases = (([1, 2, 0, 2, 1, 0, 0, 1, 0], 8),
+                 ([2, 1, 1, 0, 0, 2, 0, 1, 0], 4),
+                 ([2, 0, 0, 2, 0, 0, 1, 0, 1], 7))
+        game = main.Game(1)
+        for case in cases:
+            with self.subTest(case=case):
+                game.game_state = case[0]
+                self.assertEqual(game.com_move(), case[1])
+
 
 if __name__ == '__main__':
     unittest.main()
