@@ -40,12 +40,12 @@ class Game:
                     raise ValueError("Not a valid position")
             else:
                 if 1 <= move <= 9:
-                    return move
+                    return move - 1
                 else:
                     raise ValueError("Not a valid position")
 
     def set_move(self, player, move):
-        self.game_state[move - 1] = player
+        self.game_state[move] = player
 
     def check_winner(self):
         for line in self.LINES:
@@ -68,7 +68,7 @@ class Game:
                 if player_turn == 1:
                     self.set_move(1, self.get_move())
                 elif player_turn == 2:
-                    self.com_move()
+                    self.set_move(2, self.com_move())
                 winner = self.check_winner()
                 if winner is not None:
                     print(f"Player {winner} wins!")
@@ -80,12 +80,27 @@ class Game:
     def com_move(self):
         # TODO: implement smart AI, not just random moves
         # -- Offence
-        # Find a line with one gap
+        # Find a line with one gap and two of its own moves
         for line in self.LINES:
             game_line = [self.game_state[x] for x in line]
             if game_line.count(2) == 2 and game_line.count(0) == 1:
                 com_move = line[game_line.index(0)]
-                game.set_move(2, com_move)
+                return com_move
+
+        # -- Defence
+        # Find a line with one gap and two of opponent's moves
+        for line in self.LINES:
+            game_line = [self.game_state[x] for x in line]
+            if game_line.count(1) == 2 and game_line.count(0) == 1:
+                com_move = line[game_line.index(0)]
+                return com_move
+
+        # -- Else random
+        # If com player isn't about to win or lose, pick a random space which is still empty
+        while True:
+            com_move = random.randint(1, 9)
+            if self.game_state[com_move] == 0:
+                return com_move
 
 
 if __name__ == "__main__":
