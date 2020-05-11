@@ -35,7 +35,7 @@ class Game:
                          ["bottom right", "right bottom"]]
                 for name in names:
                     if move in name:
-                        return names.index(name) + 1
+                        return names.index(name)
                 else:
                     raise ValueError("Not a valid position")
             else:
@@ -59,23 +59,22 @@ class Game:
 
     def play(self):
         player_turn_gen = cycle((1, 2))
-        if self.num_players == 1:
-            # while there are still empty spaces
-            while 0 in self.game_state:
-                if self.mode == "console":
-                    console_display.display_game(self.game_state, self.symbols)
-                player_turn = next(player_turn_gen)
-                if player_turn == 1:
-                    self.set_move(1, self.get_move())
-                elif player_turn == 2:
+        # while there are still empty spaces
+        while 0 in self.game_state:
+            if self.mode == "console":
+                console_display.display_game(self.game_state, self.symbols)
+            player_turn = next(player_turn_gen)
+            if player_turn == 1:
+                self.set_move(1, self.get_move())
+            elif player_turn == 2:
+                if self.num_players == 1:
                     self.set_move(2, self.com_move())
-                winner = self.check_winner()
-                if winner is not None:
-                    print(f"Player {winner} wins!")
-                    break
-
-        elif self.num_players == 2:
-            pass
+                elif self.num_players == 2:
+                    self.set_move(2, self.get_move())
+            winner = self.check_winner()
+            if winner is not None:
+                print(f"Player {winner} wins!")
+                break
 
     def com_move(self):
         # TODO: implement smart AI, not just random moves
@@ -104,5 +103,6 @@ class Game:
 
 
 if __name__ == "__main__":
-    game = Game(1)
+    players = int(input("How many players? ").strip())
+    game = Game(players)
     game.play()
