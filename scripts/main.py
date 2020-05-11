@@ -18,8 +18,9 @@ class Game:
 
     def get_move(self):
         if self.mode == "console":
-            # numbered 1-9 from top left across
-            # TODO: update to allow move in words, i.e. 'top left' or 'middle right'
+            # game_state uses indexes 0-8 internally, but to the user they are numbered 1-9 from the top left
+            # get_move() will automatically convert the number from the user's perspective to the correct index
+
             move = input("Move: ").strip().lower()
             try:
                 move = int(move)
@@ -77,7 +78,6 @@ class Game:
                 break
 
     def com_move(self):
-        # TODO: implement smart AI, not just random moves
         # -- Offence
         # Find a line with one gap and two of its own moves
         for line in self.LINES:

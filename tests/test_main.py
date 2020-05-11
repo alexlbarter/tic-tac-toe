@@ -5,7 +5,7 @@ import unittest.mock
 
 class TestMain(unittest.TestCase):
     def test_get_move_valid_numbers(self):
-        cases = (("1", 1), ("2", 2), ("3", 3), ("4", 4), ("5", 5), ("6", 6), ("7", 7), ("8", 8), ("9", 9))
+        cases = (("1", 0), ("2", 1), ("3", 2), ("4", 3), ("5", 4), ("6", 5), ("7", 6), ("8", 7), ("9", 8))
         game = main.Game(1)
         for case in cases:
             with unittest.mock.patch("builtins.input", return_value=case[0]):
@@ -20,9 +20,9 @@ class TestMain(unittest.TestCase):
                     game.get_move()
 
     def test_get_move_valid_words(self):
-        cases = (("top left", 1), ("top middle", 2), ("top right", 3),
-                 ("middle left", 4), ("centre", 5), ("middle right", 6),
-                 ("bottom left", 7), ("bottom middle", 8), ("bottom right", 9))
+        cases = (("top left", 0), ("top middle", 1), ("top right", 2),
+                 ("middle left", 3), ("centre", 4), ("middle right", 5),
+                 ("bottom left", 6), ("bottom middle", 7), ("bottom right", 8))
         game = main.Game(1)
         for case in cases:
             with unittest.mock.patch("builtins.input", return_value=case[0]):
