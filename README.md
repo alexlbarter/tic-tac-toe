@@ -2,11 +2,13 @@
 
 A Python program to play tic tac toe.
 
+## Implemented features
+- Play with 1 or 2 players
+ - Play against the computer or with a friend
+- Make your move using the numerical position, or just use natural English
+- Play in the console
+
 ## Key features that will be implemented
-* 1 or 2 players
-* difficulty setting for computer player
-  * will make moves like a real player - *see com-player branch*
-* make moves using numbers, or in natural English
-  * i.e. 'top left' or 'bottom right'
-* play in the console
-* play using a web interfave
+- Difficulty setting for computer player
+- Play using a web interface
+- Play against the computer on your Discord server
