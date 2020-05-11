@@ -12,4 +12,4 @@ def display_game(game_state, symbols=(" ", "O", "X")):
             raise ValueError(f"Custom player symbols must have length of 1, not {len(symbol)}")
     if symbols[1] == symbols[2]:
         raise ValueError(f"Player symbols must be unique, both were {symbols[1]}")
-    print(generate_display_str(game_state, symbols))
+    print("\n\n", generate_display_str(game_state, symbols), sep="")
