@@ -60,23 +60,15 @@ class Game:
     def play(self):
         player_turn_gen = cycle((1, 2))
         if self.num_players == 1:
+            # while there are still empty spaces
             while 0 in self.game_state:
                 if self.mode == "console":
                     console_display.display_game(self.game_state, self.symbols)
-                # while there are still empty spaces
                 player_turn = next(player_turn_gen)
                 if player_turn == 1:
                     self.set_move(1, self.get_move())
                 elif player_turn == 2:
-                    # TODO: implement smart AI, not just random moves
-                    # -- Offence
-                    # Find a line with one gap
-                    for line in self.LINES:
-                        game_line = [self.game_state[x] for x in line]
-                        if game_line.count(2) == 2 and game_line.count(0) == 1:
-                            com_move = line[game_line.index(0)]
-                            game.set_move(2, com_move)
-
+                    self.com_move()
                 winner = self.check_winner()
                 if winner is not None:
                     print(f"Player {winner} wins!")
@@ -84,6 +76,16 @@ class Game:
 
         elif self.num_players == 2:
             pass
+
+    def com_move(self):
+        # TODO: implement smart AI, not just random moves
+        # -- Offence
+        # Find a line with one gap
+        for line in self.LINES:
+            game_line = [self.game_state[x] for x in line]
+            if game_line.count(2) == 2 and game_line.count(0) == 1:
+                com_move = line[game_line.index(0)]
+                game.set_move(2, com_move)
 
 
 if __name__ == "__main__":
