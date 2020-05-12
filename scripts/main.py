@@ -14,13 +14,18 @@ class Game:
             self.symbols = custom_symbols
         else:
             self.symbols = self.DEFAULT_SYMBOLS
+        if mode == "discord":
+            if username:
+                self.username = username
+            else:
+                raise ValueError("discord username must be given when in discord mode")
         self.game_state = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     def get_move(self):
         # game_state uses indexes 0-8 internally, but to the user they are numbered 1-9 from the top left
         # get_move() will automatically convert the number from the user's perspective to the correct index
         if self.mode == "console":
-            move = input("Move: ").strip().lower()
+            return input("Move: ").strip().lower()
 
     @staticmethod
     def parse_move(move):
