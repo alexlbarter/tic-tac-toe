@@ -18,8 +18,9 @@ class Game:
 
     def get_move(self):
         if self.mode == "console":
-            # numbered 1-9 from top left across
-            # TODO: update to allow move in words, i.e. 'top left' or 'middle right'
+            # game_state uses indexes 0-8 internally, but to the user they are numbered 1-9 from the top left
+            # get_move() will automatically convert the number from the user's perspective to the correct index
+
             move = input("Move: ").strip().lower()
             try:
                 move = int(move)
@@ -35,17 +36,17 @@ class Game:
                          ["bottom right", "right bottom"]]
                 for name in names:
                     if move in name:
-                        return names.index(name) + 1
+                        return names.index(name)
                 else:
                     raise ValueError("Not a valid position")
             else:
                 if 1 <= move <= 9:
-                    return move
+                    return move - 1
                 else:
                     raise ValueError("Not a valid position")
 
     def set_move(self, player, move):
-        self.game_state[move - 1] = player
+        self.game_state[move] = player
 
     def check_winner(self):
         for line in self.LINES:
@@ -59,33 +60,49 @@ class Game:
 
     def play(self):
         player_turn_gen = cycle((1, 2))
-        if self.num_players == 1:
-            while 0 in self.game_state:
-                if self.mode == "console":
-                    console_display.display_game(self.game_state, self.symbols)
-                # while there are still empty spaces
-                player_turn = next(player_turn_gen)
-                if player_turn == 1:
-                    self.set_move(1, self.get_move())
-                elif player_turn == 2:
-                    # TODO: implement smart AI, not just random moves
-                    # -- Offence
-                    # Find a line with one gap
-                    for line in self.LINES:
-                        game_line = [self.game_state[x] for x in line]
-                        if game_line.count(2) == 2 and game_line.count(0) == 1:
-                            com_move = line[game_line.index(0)]
-                            game.set_move(2, com_move)
+        # while there are still empty spaces
+        while 0 in self.game_state:
+            if self.mode == "console":
+                console_display.display_game(self.game_state, self.symbols)
+            player_turn = next(player_turn_gen)
+            if player_turn == 1:
+                self.set_move(1, self.get_move())
+            elif player_turn == 2:
+                if self.num_players == 1:
+                    self.set_move(2, self.com_move())
+                elif self.num_players == 2:
+                    self.set_move(2, self.get_move())
+            winner = self.check_winner()
+            if winner is not None:
+                print(f"Player {winner} wins!")
+                break
 
-                winner = self.check_winner()
-                if winner is not None:
-                    print(f"Player {winner} wins!")
-                    break
+    def com_move(self):
+        # -- Offence
+        # Find a line with one gap and two of its own moves
+        for line in self.LINES:
+            game_line = [self.game_state[x] for x in line]
+            if game_line.count(2) == 2 and game_line.count(0) == 1:
+                com_move = line[game_line.index(0)]
+                return com_move
 
-        elif self.num_players == 2:
-            pass
+        # -- Defence
+        # Find a line with one gap and two of opponent's moves
+        for line in self.LINES:
+            game_line = [self.game_state[x] for x in line]
+            if game_line.count(1) == 2 and game_line.count(0) == 1:
+                com_move = line[game_line.index(0)]
+                return com_move
+
+        # -- Else random
+        # If com player isn't about to win or lose, pick a random space which is still empty
+        while True:
+            com_move = random.randint(1, 9)
+            if self.game_state[com_move] == 0:
+                return com_move
 
 
 if __name__ == "__main__":
-    game = Game(1)
+    players = int(input("How many players? ").strip())
+    game = Game(players)
     game.play()
