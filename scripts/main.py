@@ -46,7 +46,10 @@ class Game:
                     raise ValueError("Not a valid position")
 
     def set_move(self, player, move):
-        self.game_state[move] = player
+        if self.game_state[move] == 0:
+            self.game_state[move] = player
+        else:
+            raise ValueError("Position already occupied")
 
     def check_winner(self):
         for line in self.LINES:
@@ -66,7 +69,13 @@ class Game:
                 console_display.display_game(self.game_state, self.symbols)
             player_turn = next(player_turn_gen)
             if player_turn == 1:
-                self.set_move(1, self.get_move())
+                while True:
+                    try:
+                        self.set_move(1, self.get_move())
+                    except ValueError:
+                        pass
+                    else:
+                        break
             elif player_turn == 2:
                 if self.num_players == 1:
                     self.set_move(2, self.com_move())
