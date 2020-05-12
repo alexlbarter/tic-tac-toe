@@ -7,7 +7,7 @@ class Game:
     DEFAULT_SYMBOLS = (" ", "O", "X")
     LINES = ((0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6))
 
-    def __init__(self, num_players, mode="console", custom_symbols=None):
+    def __init__(self, num_players, mode="console", custom_symbols=None, username=None):
         self.num_players = num_players
         self.mode = mode
         if custom_symbols:
@@ -17,33 +17,35 @@ class Game:
         self.game_state = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     def get_move(self):
+        # game_state uses indexes 0-8 internally, but to the user they are numbered 1-9 from the top left
+        # get_move() will automatically convert the number from the user's perspective to the correct index
         if self.mode == "console":
-            # game_state uses indexes 0-8 internally, but to the user they are numbered 1-9 from the top left
-            # get_move() will automatically convert the number from the user's perspective to the correct index
-
             move = input("Move: ").strip().lower()
-            try:
-                move = int(move)
-            except ValueError:
-                names = [["top left", "left top"],
-                         ["top middle", "middle top"],
-                         ["top right", "right top"],
-                         ["middle left", "left middle"],
-                         ["centre", "center", "middle"],
-                         ["middle right", "right middle"],
-                         ["bottom left", "left bottom"],
-                         ["bottom middle", "middle bottom"],
-                         ["bottom right", "right bottom"]]
-                for name in names:
-                    if move in name:
-                        return names.index(name)
-                else:
-                    raise ValueError("Not a valid position")
+
+    @staticmethod
+    def parse_move(move):
+        try:
+            move = int(move)
+        except ValueError:
+            names = [["top left", "left top"],
+                     ["top middle", "middle top"],
+                     ["top right", "right top"],
+                     ["middle left", "left middle"],
+                     ["centre", "center", "middle"],
+                     ["middle right", "right middle"],
+                     ["bottom left", "left bottom"],
+                     ["bottom middle", "middle bottom"],
+                     ["bottom right", "right bottom"]]
+            for name in names:
+                if move in name:
+                    return names.index(name)
             else:
-                if 1 <= move <= 9:
-                    return move - 1
-                else:
-                    raise ValueError("Not a valid position")
+                raise ValueError("Not a valid position")
+        else:
+            if 1 <= move <= 9:
+                return move - 1
+            else:
+                raise ValueError("Not a valid position")
 
     def set_move(self, player, move):
         self.game_state[move] = player
@@ -66,12 +68,12 @@ class Game:
                 console_display.display_game(self.game_state, self.symbols)
             player_turn = next(player_turn_gen)
             if player_turn == 1:
-                self.set_move(1, self.get_move())
+                self.set_move(1, self.parse_move(self.get_move()))
             elif player_turn == 2:
                 if self.num_players == 1:
                     self.set_move(2, self.com_move())
                 elif self.num_players == 2:
-                    self.set_move(2, self.get_move())
+                    self.set_move(2, self.parse_move(self.get_move()))
             winner = self.check_winner()
             if winner is not None:
                 print(f"Player {winner} wins!")
