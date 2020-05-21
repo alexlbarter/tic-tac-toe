@@ -42,21 +42,30 @@ async def make_move(ctx, *move):
 
 
 @bot.command(name="query")
-async def query(ctx, action):
-    if action == "games":
-        singular = True if len(bot.current_games) == 1 else False
-        await ctx.send(f"There {'is' if singular else 'are'} currently {len(bot.current_games)} "
-                       f"{'person' if singular else 'people'} playing")
+async def query(ctx, action=None):
+    for role in ctx.author.roles:
+        if role.id == 713077327445229569:
+            permitted = True
+            break
+    else:
+        permitted = False
 
-    elif action == "players":
-        if len(bot.current_games) == 0:
-            await ctx.send("There is currently nobody playing")
-        else:
-            await ctx.send("Currently playing:")
-            player_list = []
-            for game in bot.current_games:
-                player_list.append(str(game.username))
-            players_str = "\n- ".join(player_list)
-            await ctx.send(f"```{players_str}```")
+    if permitted:
+        if action == "games":
+            singular = True if len(bot.current_games) == 1 else False
+            await ctx.send(f"There {'is' if singular else 'are'} currently {len(bot.current_games)} "
+                           f"{'person' if singular else 'people'} playing")
+
+        elif action == "players":
+            if len(bot.current_games) == 0:
+                await ctx.send("There is currently nobody playing")
+            else:
+                await ctx.send("Currently playing:")
+                player_list = []
+                for game in bot.current_games:
+                    player_list.append(str(game.username))
+                players_str = "\n- ".join(player_list)
+                await ctx.send(f"```{players_str}```")
+
 
 bot.run(BOT_TOKEN)
